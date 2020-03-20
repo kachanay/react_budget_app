@@ -10,8 +10,6 @@ import './styles/styles.scss';
 import 'react-dates/lib/css/_datepicker.css';
 
 const store = configureStore();
-store.dispatch(addExpense({ description: 'Water bill', amount: 2000, createdAt: 1000 }));
-store.dispatch(addExpense({ description: 'Gas bill', amount: 1000, createdAt: -21000 }));
 
 ReactDOM.render(
   <Provider store={store}>
