@@ -1,4 +1,4 @@
-import {addExpense, startAddExpense, editExpense, removeExpense, setExpenses, startSetExpenses, startRemoveExpense } from '../../actions/expenses';
+import {addExpense, startAddExpense, startEditExpense, editExpense, removeExpense, setExpenses, startSetExpenses, startRemoveExpense } from '../../actions/expenses';
 import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import moment from 'moment';
@@ -110,6 +110,24 @@ test('should fetch expenses from firebase', (done) => {
     expect(actions[0]).toEqual({
       type: 'SET_EXPENSES',
       expenses
+    })
+    done();
+  })
+});
+
+test('should edit expense from firebase', (done) => {
+  const store = mockStore({});
+  store.dispatch(startEditExpense('-M3BKU8gOch_hgb16FJH', { amount: 1000 })).then(() => {
+    const actions = store.getActions();
+    expect(actions[0]).toEqual({
+      type: 'EDIT_EXPENSE',
+      '-M3BKU8gOch_hgb16FJH',
+      expense: {
+        description: 'Snacks',
+        note: 'Snacks amount',
+        amount: 1000,
+        createdAt: 1000
+      }
     })
     done();
   })
