@@ -2,12 +2,12 @@ import React from 'react';
 import { shallow } from 'enzyme';
 import { CreateExpense } from '../../components/CreateExpense';
 
-let addExpense, history, wrapper;
+let startAddExpense, history, wrapper;
 
 beforeEach(() => {
-  addExpense = jest.fn();
+  startAddExpense = jest.fn();
   history = { push: jest.fn() };
-  wrapper = shallow(<CreateExpense addExpense={addExpense} history={history} />);
+  wrapper = shallow(<CreateExpense startAddExpense={startAddExpense} history={history} />);
 });
 
 test('should render create expense component correctly', () => {
@@ -22,7 +22,7 @@ test('should handle onSubmit', () => {
     createdAt: 0
   });
   expect(history.push).toHaveBeenCalledWith('/');
-  expect(addExpense).toHaveBeenLastCalledWith({
+  expect(startAddExpense).toHaveBeenLastCalledWith({
     description: 'test description',
     note: 'test note',
     amount: 1000,

@@ -1,4 +1,5 @@
 import expensesReducer from '../../reducers/expenses';
+import moment from 'moment';
 
 test('should set default state', () => {
   const state = expensesReducer(undefined, { type: '@@INIT' });
@@ -28,6 +29,53 @@ test('Should add new expense', () => {
     createdAt: 0,
     note: 'test note'
   })
+});
+
+test('Should set Expenses', () => {
+  const expenses = [{
+    id: '5',
+    desctiption: 'new expense',
+    amount: 5000,
+    createdAt: 1000
+  },
+  {
+    id: '6',
+    description: 'other expense',
+    amount: 4000,
+    createdAt: 2000
+  }];
+
+  const oldExpenses = [{
+    id: '1',
+    description: 'Rent',
+    note: 'Rent note',
+    amount: 7000,
+    createdAt: 0
+  },
+  {
+    id: '2',
+    description: 'Groceries',
+    note: 'Groceries note',
+    amount: 3000,
+    createdAt: moment(0).subtract(4, 'days').valueOf()
+  },
+  {
+    id: '3',
+    description: 'Snacks',
+    note: 'Snacks note',
+    amount: 3000,
+    createdAt: moment(0).add(4, 'days').valueOf()
+  },
+  {
+    id: '4',
+    description: 'Vegetables and Fruits',
+    note: '',
+    amount: 2000,
+    createdAt: moment(0).subtract(1, 'days').valueOf()
+  }]
+  const state = expensesReducer(oldExpenses, { type: 'SET_EXPENSES', expenses });
+
+  expect(state).toEqual(expenses)
 });
 
 test('Should edit an existing expense', () => {

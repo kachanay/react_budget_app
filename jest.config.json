@@ -4,6 +4,7 @@
     "raf/polyfill",
     "<rootDir>/src/tests/setupTests.js"
   ],
+  "testEnvironment": "jsdom",
   "snapshotSerializers": [
     "enzyme-to-json/serializer"
   ]
