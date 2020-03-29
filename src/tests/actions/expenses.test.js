@@ -1,9 +1,10 @@
-import {addExpense, startAddExpense, startEditExpense, editExpense, removeExpense, setExpenses, startSetExpenses, startRemoveExpense } from '../../actions/expenses';
+import { addExpense, startAddExpense, startEditExpense, editExpense, removeExpense, setExpenses, startSetExpenses, startRemoveExpense } from '../../actions/expenses';
 import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import moment from 'moment';
 import database from '../../firebase/firebase';
 
+const uid = 'thisismytestuid';
 const mockStore = configureStore([thunk]);
 
 const expenses = [
@@ -37,18 +38,18 @@ const expenses = [
   }
 ];
 
-// beforeEach((done) => {
-//   const expensesData = {};
-//   expenses.forEach(({id, description, note, amount, createdAt}) => {
-//     expensesData[id] = {
-//       description,
-//       note,
-//       amount,
-//       createdAt
-//     }
-//   })
-//   database.ref('expenses').set(expensesData).then(() => done());
-// });
+beforeEach((done) => {
+  const expensesData = {};
+  expenses.forEach(({ id, description, note, amount, createdAt }) => {
+    expensesData[id] = {
+      description,
+      note,
+      amount,
+      createdAt
+    }
+  })
+  database.ref(`users/${uid}/expenses`).set(expensesData).then(() => done());
+});
 
 test('Should test remove expense', () => {
   const action = removeExpense({ id: '123456' });
@@ -89,17 +90,17 @@ test('Should add expense to database and store', () => {
     amount: 3000,
     createdAt: 1000
   }
-  const store = mockStore({});
+  const store = mockStore({ auth: { uid }});
   store.dispatch(startAddExpense(expenseData)).then(() => {
     const actions = store.getActions();
     expect(actions[0]).toEqual({
       type: 'ADD_EXPENSE',
-      expense : {
+      expense: {
         id: expect.any(String),
         ...expenseData
       }
     });
-   // done();
+    // done();
   })
 });
 
@@ -116,12 +117,12 @@ test('should fetch expenses from firebase', (done) => {
 });
 
 test('should edit expense from firebase', (done) => {
-  const store = mockStore({});
+  const store = mockStore({ auth: { uid }});
   store.dispatch(startEditExpense('-M3BKU8gOch_hgb16FJH', { amount: 1000 })).then(() => {
     const actions = store.getActions();
     expect(actions[0]).toEqual({
       type: 'EDIT_EXPENSE',
-      '-M3BKU8gOch_hgb16FJH',
+      id: '-M3BKU8gOch_hgb16FJH',
       expense: {
         description: 'Snacks',
         note: 'Snacks amount',
@@ -134,8 +135,8 @@ test('should edit expense from firebase', (done) => {
 });
 
 test('Should remove expense from firebase', (done) => {
-  const store = mockStore({});
-  store.dispatch(startRemoveExpense({id: '-M3BKU8gOch_hgb16FJH'})).then(() => {
+  const store = mockStore({ auth: { uid } });
+  store.dispatch(startRemoveExpense({ id: '-M3BKU8gOch_hgb16FJH' })).then(() => {
     const actions = store.getActions();
     expect(actions[0]).toEqual({
       type: 'REMOVE_EXPENSE',
